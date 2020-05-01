@@ -1,18 +1,15 @@
 import React, { useContext } from 'react';
 import { Card, Image, Button } from 'semantic-ui-react';
-import { IActivity } from '../../../app/models/activity';
 import ActivityStor from '../../../app/stores/activityStore';
 import { observer } from 'mobx-react-lite';
-interface IPros {
-  setEditMode: (editMode: boolean) => void;
-  setSelectedActivity: (activity: IActivity | null) => void;
-}
-const ActivityDetails: React.FC<IPros> = ({
-  setEditMode,
-  setSelectedActivity,
-}) => {
+
+const ActivityDetails: React.FC = () => {
   const activityStore = useContext(ActivityStor);
-  const { selectedActivity: activity } = activityStore;
+  const {
+    selectedActivity: activity,
+    openEditFrom,
+    cancelSelectedActivity,
+  } = activityStore;
   return (
     <Card fluid>
       <Image
@@ -30,14 +27,14 @@ const ActivityDetails: React.FC<IPros> = ({
       <Card.Content extra>
         <Button.Group widths={2}>
           <Button
-            onClick={() => setEditMode(true)}
+            onClick={() => openEditFrom(activity!.id)}
             basic
             color="blue"
             content="Edit"
           ></Button>
           <Button
             basic
-            onClick={() => setSelectedActivity(null)}
+            onClick={() => cancelSelectedActivity}
             color="grey"
             content="Cancel"
           ></Button>
