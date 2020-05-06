@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistance;
+using FluentValidation.AspNetCore;
 namespace API
 {
     public class Startup
@@ -22,14 +23,17 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+
+            services.AddControllers().AddFluentValidation(ctg =>
+            ctg.RegisterValidatorsFromAssemblyContaining<Create>()
+            );
             services.AddCors(opt =>
-            {
-                opt.AddPolicy(MyAllowSpecificOrigins, policy =>
-                {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-                });
-            });
+           {
+               opt.AddPolicy(MyAllowSpecificOrigins, policy =>
+               {
+                   policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+               });
+           });
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddDbContext<DataContext>(opt => { opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection")); });
         }
@@ -48,9 +52,9 @@ namespace API
             app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+           {
+               endpoints.MapControllers();
+           });
         }
     }
 }
