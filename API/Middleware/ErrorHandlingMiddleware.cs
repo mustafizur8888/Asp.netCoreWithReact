@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -41,6 +42,7 @@ namespace API.Middleware
                 case Exception e:
                     logger.LogError(ex, "SERVER ERROR");
                     errors = string.IsNullOrEmpty(e.Message) ? "Error" : e.Message;
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
             context.Response.ContentType = "application/json";
