@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 axios.defaults.baseURL = 'http://localhost:5000/api';
 
 axios.interceptors.response.use(undefined, (error: any) => {
-  console.log(error);
   if (error.message === 'Network Error' && !error.response) {
     toast.error('Network error - make sure API is running!');
   }
@@ -22,7 +21,7 @@ axios.interceptors.response.use(undefined, (error: any) => {
   } else if (status === 500) {
     toast.error('Server error -check ther terminal for more info!');
   }
-  console.log(error.response);
+  throw error;
 });
 
 const resposeBody = (response: AxiosResponse) => response.data;
