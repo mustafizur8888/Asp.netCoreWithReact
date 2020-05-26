@@ -18,9 +18,26 @@ namespace Persistance
                 new Value { Id = 4, Name = "Value 104" },
                 new Value { Id = 5, Name = "Value 105" }
             );
+            modelBuilder.Entity<UserActivity>(x => x.HasKey(ua => new
+            {
+                ua.AppUserId,
+                ua.ActivityId
+            }));
+
+            modelBuilder.Entity<UserActivity>()
+            .HasOne(u => u.AppUser)
+            .WithMany(a => a.UserActivities)
+            .HasForeignKey(u => u.AppUserId);
+
+            modelBuilder.Entity<UserActivity>()
+            .HasOne(a => a.Activity)
+            .WithMany(u => u.UserActivities)
+            .HasForeignKey(a => a.ActivityId);
+
         }
         public DbSet<Value> Values { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<UserActivity> UserActivities { get; set; }
         //   public DbSet<AppUser> AppUsers { get; set; }
     }
 }

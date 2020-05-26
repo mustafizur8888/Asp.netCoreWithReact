@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using AutoMapper;
 
 namespace API
 {
@@ -50,7 +51,13 @@ namespace API
                 });
 
             services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddDbContext<DataContext>(opt => { opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection")); });
+            services.AddAutoMapper(typeof(List.Handler));
+
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseLazyLoadingProxies();
+                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
             services.AddIdentity<AppUser, IdentityRole>()
                   .AddEntityFrameworkStores<DataContext>()
                   .AddSignInManager<SignInManager<AppUser>>();
