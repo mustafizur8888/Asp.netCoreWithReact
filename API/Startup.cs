@@ -41,7 +41,8 @@ namespace API
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             })
-            .AddFluentValidation(ctg => ctg.RegisterValidatorsFromAssemblyContaining<Create>());
+            .AddFluentValidation(ctg => ctg.RegisterValidatorsFromAssemblyContaining<Create>())
+            .AddNewtonsoftJson();
             services.AddCors(opt =>
                 {
                     opt.AddPolicy(MyAllowSpecificOrigins, policy =>
