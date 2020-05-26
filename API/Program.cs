@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Persistance;
 using Microsoft.AspNetCore.Identity;
 using Domain;
+using Persistence;
 
 namespace API
 {
