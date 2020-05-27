@@ -35,7 +35,8 @@ const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({
         <ActivityDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ActivitydetailedSidebar />
+        {/* {JSON.stringify(activity.attendees)} */}
+        <ActivitydetailedSidebar attendees={activity.attendees} />
       </Grid.Column>
     </Grid>
   );

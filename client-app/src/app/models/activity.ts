@@ -6,6 +6,8 @@ export interface IActivity {
   date: Date;
   city: string;
   venue: string;
+  isGoing: boolean;
+  isHost: boolean;
   attendees: IAttendee[];
 }
 
@@ -32,7 +34,7 @@ export class ActivityFormValues implements IActivityFormValues {
 
 export interface IAttendee {
   username: string;
-  displayName: string;
+  displayname: string;
   image: string;
   isHost: boolean;
 }

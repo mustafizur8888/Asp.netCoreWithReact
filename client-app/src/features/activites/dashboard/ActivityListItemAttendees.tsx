@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Image } from 'semantic-ui-react';
+import { List, Image, Popup } from 'semantic-ui-react';
 import { IAttendee } from '../../../app/models/activity';
 
 interface IPorps {
@@ -11,11 +11,16 @@ const ActivityListItemAttendees: React.FC<IPorps> = ({ attendees }) => {
     <List horizontal>
       {attendees?.map((attendee) => (
         <List.Item key={attendee.username}>
-          <Image
-            size="mini"
-            circular
-            src={attendee.image || '/assets/user.png'}
-          />
+          <Popup
+            header={attendee.displayname}
+            trigger={
+              <Image
+                size="mini"
+                circular
+                src={attendee.image || '/assets/user.png'}
+              />
+            }
+          ></Popup>
         </List.Item>
       ))}
     </List>
