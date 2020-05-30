@@ -1,4 +1,4 @@
-import { IProfile, IPhoto } from './../models/profile';
+import { IProfile, IPhoto, IUpdateProfile } from './../models/profile';
 import { IUser, IUserFormValues } from './../models/user';
 import axios, { AxiosResponse } from 'axios';
 import { IActivity } from '../models/activity';
@@ -88,6 +88,8 @@ const Profile = {
     request.postForm(`/photos`, photo),
   setMainPhoto: (id: string) => request.post(`/photos/${id}/setMain`, {}),
   delete: (id: string) => request.del(`/photos/${id}`),
+  updateProfile: (profile: IUpdateProfile): Promise<IUpdateProfile> =>
+    request.put(`/profiles`, profile),
 };
 
 export default {

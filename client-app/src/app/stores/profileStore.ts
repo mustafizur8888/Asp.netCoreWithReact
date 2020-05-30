@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { IProfile, IPhoto } from './../models/profile';
+import { IProfile, IPhoto, IUpdateProfile } from './../models/profile';
 import { RootStore } from './rootStore';
 import { observable, action, runInAction, computed } from 'mobx';
 import agent from '../api/agent';
@@ -13,6 +13,7 @@ export default class ProfileStore {
   @observable loadingProfile = true;
   @observable uploadingPhoto = false;
   @observable loading = false;
+  @observable loadingEditProfile = false;
 
   @computed get isCuurentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -91,6 +92,32 @@ export default class ProfileStore {
     } catch (error) {
       toast.error('Problem delete photo');
       runInAction(() => (this.loading = false));
+    }
+  };
+
+  @action getUpdateProfileInfo = (): IUpdateProfile => {
+    return {
+      bio: this.profile!.bio,
+      displayName: this.profile!.displayName,
+    };
+  };
+
+  @action updateProfile = async (updateProfile: IUpdateProfile) => {
+    this.loadingEditProfile = true;
+    try {
+      var result = await agent.Profile.updateProfile(updateProfile);
+      runInAction(() => {
+        this.profile!.bio = result.bio;
+        this.profile!.displayName = result.displayName;
+        this.rootStore.userStore.user!.displayName = result.displayName;
+        this.loadingEditProfile = false;
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to update');
+      runInAction(() => {
+        this.loadingEditProfile = false;
+      });
     }
   };
 }
