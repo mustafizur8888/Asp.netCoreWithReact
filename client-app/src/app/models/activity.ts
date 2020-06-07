@@ -9,6 +9,16 @@ export interface IActivity {
   isGoing: boolean;
   isHost: boolean;
   attendees: IAttendee[];
+  comments: IComment[];
+}
+
+export interface IComment {
+  id: string;
+  createdAt: Date;
+  body: string;
+  displayName: string;
+  image: string;
+  userName: string;
 }
 
 export interface IActivityFormValues extends Partial<IActivity> {

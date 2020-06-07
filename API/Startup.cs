@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Text;
 using Application.Activities;
 using MediatR;
@@ -20,6 +21,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
 using Infrastructure.Photos;
+using API.SignalR;
 
 namespace API
 {
@@ -36,7 +38,7 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSignalR();
             services.AddControllers(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -48,7 +50,7 @@ namespace API
                 {
                     opt.AddPolicy(MyAllowSpecificOrigins, policy =>
                     {
-                        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
                     });
                 });
 
@@ -88,7 +90,19 @@ namespace API
                     ValidateAudience = false,
                     ValidateIssuer = false,
                 };
-
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrWhiteSpace(accessToken) && path.StartsWithSegments("/chat"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
@@ -114,9 +128,10 @@ namespace API
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
-           {
-               endpoints.MapControllers();
-           });
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
+            });
         }
     }
 }
