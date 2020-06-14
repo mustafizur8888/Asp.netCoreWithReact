@@ -5,7 +5,7 @@ import { Form as FinalForm, Field } from 'react-final-form';
 import { Link } from 'react-router-dom';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import { observer } from 'mobx-react-lite';
-import { formatDistance } from 'date-fns';
+import { formatDistance, parseISO, isValid, format } from 'date-fns';
 import toDate from 'date-fns/toDate';
 
 const ActivityDetailedChat = () => {
@@ -47,8 +47,14 @@ const ActivityDetailedChat = () => {
                     {comment.displayName}
                   </Comment.Author>
                   <Comment.Metadata>
-                    {/* {toDate('2014-11-03T19:38:34.203Z')} */}
-                    {/* <div>{formatDistance(comment.createdAt, new Date())}</div> */}
+                    {
+                      <div>
+                        {formatDistance(
+                          parseISO(comment.createdAt.toString()),
+                          new Date()
+                        )}
+                      </div>
+                    }
                   </Comment.Metadata>
                   <Comment.Text>{comment.body}</Comment.Text>
                 </Comment.Content>
