@@ -3,6 +3,9 @@ export interface IProfile {
   username: string;
   bio: string;
   image: string;
+  following: boolean;
+  followersCount: Number;
+  followingCount: Number;
   photos: IPhoto[];
 }
 
